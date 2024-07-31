@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pantry Maker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.1"
+            integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="flex flex-col min-h-screen justify-center items-center">
+    <h2 class="text-4xl text-center w-full max-w-lg font-extrabold text-white bg-blue-500 py-4 px-8 rounded-lg shadow-md">
+        Pantry</h2>
+    <!-- Form to Add New Pantry Item -->
+    <form id="add_form" hx-post="/add_pantry" hx-target="#pantry-items" hx-swap="beforeend"
+          class="w-full max-w-lg mt-4"
+          hx-on::after-request="document.getElementById('add_form').reset();handleNewItem();">
+        <div class="flex flex-col mb-4">
+            <label for="name" class="mb-2">Item Name</label>
+            <input type="text" id="name" name="name" class="border p-2 rounded">
+        </div>
+        <div class="flex flex-col mb-4">
+            <label for="count" class="mb-2">Initial Count</label>
+            <input type="number" id="count" name="count" class="border p-2 rounded" value="1">
+        </div>
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md">Add Pantry Item</button>
+    </form>
+
+    <div id='pantry-items' class="w-full max-w-lg h-50 overflow-auto">
+        {% for item in pantry_ls %}
+            {% include 'components/item.html' %}
+        {% endfor %}
+
+    </div>
+</div>
+<script>
+    function handleNewItem() {
+        const pantryItems = document.getElementById('pantry-items');
+        const lastChild = pantryItems.lastElementChild;
+        if (lastChild) {
+            const elements = document.querySelectorAll(`#${lastChild.id}`);
+            if (elements.length > 1){
+                elements[0].parentNode.removeChild(elements[0]);
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

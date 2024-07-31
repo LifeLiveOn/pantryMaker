@@ -1,0 +1,24 @@
+<div id="item-{{ item.id }}"
+                 class="pantry-item h-16 flex items-center justify-between border border-gray-300 my-2 bg-gray-100 rounded-md text-lg font-medium text-gray-700 px-4">
+    <span>{{ item.name }}</span>
+    <div class="flex items-center">
+        <button class="bg-red-500 text-white px-2 py-1 rounded-md"
+                hx-post="/decrement/{{ item.id }}"
+                hx-target="#count-{{ item.id }}"
+                hx-swap="outerHTML">-
+        </button>
+        <span id="count-{{ item.id }}" class="mx-2">{{ item.count }}</span>
+        <button class="bg-green-500 text-white px-2 py-1 rounded-md"
+                hx-post="/increment/{{ item.id }}"
+                hx-target="#count-{{ item.id }}"
+                hx-swap="outerHTML">+
+        </button>
+        <button class="bg-red-700 text-white px-2 py-1 ml-2 rounded-md"
+                hx-post="/remove_all/{{ item.id }}"
+                hx-swap="outerHTML"
+                hx-on:click="document.getElementById('item-{{ item.id }}').remove();"
+                >
+            Remove All
+        </button>
+    </div>
+</div>
