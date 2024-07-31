@@ -1,0 +1,47 @@
+<!-- templates/camera.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Capture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="flex flex-col min-h-screen justify-center items-center">
+    <h1 class="text-4xl font-extrabold">Capture Image</h1>
+    <video id="video" width="640" height="480" autoplay class="mt-4"></video>
+    <button id="snap" class="bg-blue-500 text-white px-4 py-2 rounded-md mt-4">Snap Photo</button>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <form id="upload-form" hx-post="/upload" hx-target="#pantry-items" hx-swap="innerHTML">
+        <input type="file" id="image-file" name="image" style="display:none;">
+        <input type="hidden" id="image-data" name="image_data">
+    </form>
+    <a href="/" class="bg-gray-500 text-white px-4 py-2 rounded-md mt-4">Back to Pantry</a>
+</div>
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const snap = document.getElementById('snap');
+    const imageFile = document.getElementById('image-file');
+    const imageDataInput = document.getElementById('image-data');
+    const uploadForm = document.getElementById('upload-form');
+
+    navigator.mediaDevices.getUserMedia({video: true})
+        .then(stream => {
+            video.srcObject = stream;
+        });
+
+    snap.addEventListener('click', () => {
+        context.drawImage(video, 0, 0, 640, 480);
+        const dataURL = canvas.toDataURL('image/png');
+        imageDataInput.value = dataURL;
+
+        setTimeout(() => {
+            uploadForm.submit();
+        }, 1000);
+    });
+</script>
+</body>
+</html>

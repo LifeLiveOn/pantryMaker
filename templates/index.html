@@ -25,6 +25,7 @@
     <button class="bg-green-500 text-white px-4 py-2 rounded-md mt-2" hx-get="/camera" hx-target="#camera-section"
             hx-swap="innerHTML">Capture Items
     </button>
+
     {% if form %}
     {% include 'components/form.html' %}
     {% endif %}
@@ -34,9 +35,10 @@
         {% include 'components/item.html' %}
         {% endfor %}
     </div>
-    <div id="camera-section" class="w-full max-w-lg h-52 overflow-auto mt-4">
+    <div id="camera-section" class="w-full max-w-lg h-52 mt-4">
     </div>
 </div>
+
 <script>
     function filterItems() {
         const query = document.getElementById('search').value.toLowerCase();
