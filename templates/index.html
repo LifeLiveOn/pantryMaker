@@ -10,37 +10,63 @@
 </head>
 <body>
 <div class="flex flex-col min-h-screen justify-center items-center">
-    <h2 class="text-4xl text-center w-full max-w-lg font-extrabold text-white bg-blue-500 py-4 px-8 rounded-lg shadow-md">
-        Pantry</h2>
+    <div class="flex w-full max-w-lg bg-blue-500 py-4 px-8 rounded-lg shadow-md">
+        <h2 class="flex-auto w-32 text-4xl font-extrabold text-white">
+            Pantry
+        </h2>
+        <div class="flex-none ml-4">
+            <input type="text" id="search" placeholder="Search..." class="border p-2 rounded-l-md focus:outline-none"
+                   oninput="filterItems()">
+
+        </div>
+    </div>
     <!-- Form to Add New Pantry Item -->
-    <form id="add_form" hx-post="/add_pantry" hx-target="#pantry-items" hx-swap="beforeend"
-          class="w-full max-w-lg mt-4"
-          hx-on::after-request="document.getElementById('add_form').reset();handleNewItem();">
-        <div class="flex flex-col mb-4">
-            <label for="name" class="mb-2">Item Name</label>
-            <input type="text" id="name" name="name" class="border p-2 rounded">
-        </div>
-        <div class="flex flex-col mb-4">
-            <label for="count" class="mb-2">Initial Count</label>
-            <input type="number" id="count" name="count" class="border p-2 rounded" value="1">
-        </div>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md">Add Pantry Item</button>
-    </form>
+    <button class="bg-blue-500 text-white px-4 py-2 rounded-md mt-2" hx-on:click="showForm();">Add item?</button>
+    <button class="bg-green-500 text-white px-4 py-2 rounded-md mt-2" hx-get="/camera" hx-target="#camera-section"
+            hx-swap="innerHTML">Capture Items
+    </button>
+    {% if form %}
+    {% include 'components/form.html' %}
+    {% endif %}
 
-    <div id='pantry-items' class="w-full max-w-lg h-50 overflow-auto">
+    <div id='pantry-items' class="w-full max-w-lg h-52 overflow-auto">
         {% for item in pantry_ls %}
-            {% include 'components/item.html' %}
+        {% include 'components/item.html' %}
         {% endfor %}
-
+    </div>
+    <div id="camera-section" class="w-full max-w-lg h-52 overflow-auto mt-4">
     </div>
 </div>
 <script>
+    function filterItems() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const items = document.querySelectorAll('#pantry-items .item');
+
+        items.forEach(item => {
+            const itemName = item.querySelector('.item-name').textContent.toLowerCase();
+            if (itemName.includes(query)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function showForm() {
+        const form = document.getElementById("add_form");
+        if (form.style.display === 'none') {
+            form.style.display = 'block'
+        } else {
+            form.style.display = 'none'
+        }
+    }
+
     function handleNewItem() {
         const pantryItems = document.getElementById('pantry-items');
         const lastChild = pantryItems.lastElementChild;
         if (lastChild) {
             const elements = document.querySelectorAll(`#${lastChild.id}`);
-            if (elements.length > 1){
+            if (elements.length > 1) {
                 elements[0].parentNode.removeChild(elements[0]);
             }
         }

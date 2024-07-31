@@ -6,9 +6,11 @@ name = "pypi"
 [packages]
 flask = "*"
 firebase-admin = "*"
+flask-validator = "*"
+flask-wtf = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11"
-python_full_version = "3.11.5"
+python_version = "3"
